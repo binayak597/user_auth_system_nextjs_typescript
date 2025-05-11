@@ -27,3 +27,5 @@ const connectToDB = async () =>{
   }
 
 }
+
+export {connectToDB}
