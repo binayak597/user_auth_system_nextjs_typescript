@@ -50,8 +50,8 @@ const LoginPage = () => {
       router.push("/profile")
     } catch (error: any) {
       
-      console.log("login error -> ", error.message)
-      toast.error("login failed")
+      console.log("login error -> ", error.response.data.message)
+      toast.error(error.response.data.message)
     } finally{
 
       setLoading(false)
