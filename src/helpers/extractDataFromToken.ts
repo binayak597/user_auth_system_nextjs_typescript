@@ -14,7 +14,7 @@ const extractDataFromToken = async (request: NextRequest) => {
       throw new Error("Token not found");
     }
 
-    const decodedTokenData: any = await jwt.verify(
+    const decodedTokenData = await jwt.verify(
       token,
       process.env.JWT_SECRET!
     )as DecodedTokenData
