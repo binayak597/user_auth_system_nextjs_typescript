@@ -41,7 +41,7 @@ const POST = async (request: NextRequest) => {
     console.log("New user created: ", newUser);
 
     //send the verification email to user
-    await sendEmail(email, EmailType.VERIFY_TOKEN, newUser._id)
+    await sendEmail(email, EmailType.VERIFY_TOKEN, newUser._id);
 
     return NextResponse.json(
       {
@@ -53,16 +53,30 @@ const POST = async (request: NextRequest) => {
         status: 201,
       }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.log("Error in createUser: ", error);
-    return NextResponse.json(
-      {
-        message: error.message,
-      },
-      {
-        status: 500,
-      }
-    );
+    if (error instanceof Error) {
+      // TypeScript now knows this is a general Error object
+      return NextResponse.json(
+        {
+          message: error.message,
+        },
+        {
+          status: 500,
+        }
+      );
+    } else {
+      // Handle unexpected error structures
+      console.error("Unexpected error ->", error);
+      return NextResponse.json(
+        {
+          message: "An unexpected error occurred",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
   }
 };
 

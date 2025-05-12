@@ -3,8 +3,9 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import  axios  from "axios";
+import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
+import { ApiError } from "next/dist/server/api-utils";
 
 type LoginFormData = {
   email: string;
@@ -17,11 +18,11 @@ const LoginPage = () => {
     password: "",
   });
 
-  const [buttonDisabled, setButtonDisabled] = useState(false)
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
-  const router = useRouter()
+  const router = useRouter();
 
   const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = ev.target;
@@ -32,45 +33,45 @@ const LoginPage = () => {
   };
 
   const handleLogin = async () => {
-
     try {
-      
-      setLoading(true)
+      setLoading(true);
 
-      const response = await axios.post("/api/user/login", loginFormData)
+      const response = await axios.post("/api/user/login", loginFormData);
 
-      console.log(" Login result -> ", response.data)
-      toast.success("Login successful")
+      console.log(" Login result -> ", response.data);
+      toast.success("Login successful");
 
       setLoginFormData({
         email: "",
-        password: ""
-      })
+        password: "",
+      });
 
-      router.push("/profile")
-    } catch (error: any) {
-      
-      console.log("login error -> ", error.response.data.message)
-      toast.error(error.response.data.message)
-    } finally{
-
-      setLoading(false)
+      router.push("/profile");
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.data) {
+        console.log("login error -> ", error.response.data.message);
+        toast.error(error.response.data.message);
+      } else {
+        console.error("Unexpected error -> ", error);
+        toast.error("An unexpected error occurred");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-
-    const {email, password} = loginFormData
-    if(email.length > 0 && password.length > 0){
-      setButtonDisabled(false)
-    }else{
-      setButtonDisabled(true)
+    const { email, password } = loginFormData;
+    if (email.length > 0 && password.length > 0) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
     }
-  }, [loginFormData])
+  }, [loginFormData]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1 className="mb-8">{loading? "Please wait...": "Login"}</h1>
+      <h1 className="mb-8">{loading ? "Please wait..." : "Login"}</h1>
       <hr />
 
       {/* email field */}

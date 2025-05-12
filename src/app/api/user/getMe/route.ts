@@ -26,15 +26,29 @@ const GET = async (request: NextRequest) => {
         status: 200,
       }
     );
-  } catch (error: any) {
-    return NextResponse.json(
-      {
-        message: error.message,
-      },
-      {
-        status: 500,
-      }
-    );
+  } catch (error) {
+    if (error instanceof Error) {
+      // TypeScript now knows this is a general Error object
+      return NextResponse.json(
+        {
+          message: error.message,
+        },
+        {
+          status: 500,
+        }
+      );
+    } else {
+      // Handle unexpected error structures
+      console.error("Unexpected error ->", error);
+      return NextResponse.json(
+        {
+          message: "An unexpected error occurred",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
   }
 };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -22,9 +22,14 @@ const ProfilePage = () => {
       await axios.get("/api/user/logout");
       toast.success("logout successful");
       router.push("/login");
-    } catch (error: any) {
-      console.log(error.response.data.message);
-      toast.error(error.response.data.message);
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.data) {
+        console.log("profile page error -> ", error.response.data.message);
+        toast.error(error.response.data.message);
+      } else {
+        console.error("Unexpected error -> ", error);
+        toast.error("An unexpected error occurred");
+      }
     }
   };
 
@@ -35,9 +40,14 @@ const ProfilePage = () => {
       setUserDetails(data.user);
       console.log(data.user);
       toast.success("User details fetched successfully");
-    } catch (error: any) {
-      console.log(error.response.data.message);
-      toast.error(error.response.data.message);
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.data) {
+        console.log(error.response.data.message);
+        toast.error(error.response.data.message);
+      } else {
+        console.error("Unexpected error -> ", error);
+        toast.error("An unexpected error occurred");
+      }
     }
   };
   return (

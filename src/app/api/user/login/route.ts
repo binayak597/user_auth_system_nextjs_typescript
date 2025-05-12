@@ -1,12 +1,11 @@
-import { NextRequest, NextResponse } from "next/server"
-import bcrypt from "bcryptjs"
-import jwt from "jsonwebtoken"
+import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-import { connectToDB } from "@/dbConfig/connectToDB"
-import User from "@/models/userSchema"
+import { connectToDB } from "@/dbConfig/connectToDB";
+import User from "@/models/userSchema";
 
-
-connectToDB()
+connectToDB();
 
 const POST = async (request: NextRequest) => {
   try {
@@ -54,30 +53,46 @@ const POST = async (request: NextRequest) => {
       expiresIn: "1h",
     });
 
-    const response = NextResponse.json({
-      message: "Login successful",
-      success: true
-    }, 
-  {
-    status: 200
-  });
+    const response = NextResponse.json(
+      {
+        message: "Login successful",
+        success: true,
+      },
+      {
+        status: 200,
+      }
+    );
 
     response.cookies.set("authToken", token, {
       httpOnly: true,
     });
 
     return response;
-  } catch (error: any) {
+  } catch (error) {
     console.log("Error in loginUser: ", error);
 
-    return NextResponse.json(
-      {
-        message: error.message,
-      },
-      {
-        status: 500,
-      }
-    );
+    if (error instanceof Error) {
+      // TypeScript now knows this is a general Error object
+      return NextResponse.json(
+        {
+          message: error.message,
+        },
+        {
+          status: 500,
+        }
+      );
+    } else {
+      // Handle unexpected error structures
+      console.error("Unexpected error ->", error);
+      return NextResponse.json(
+        {
+          message: "An unexpected error occurred",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
   }
 };
 

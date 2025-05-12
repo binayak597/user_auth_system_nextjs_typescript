@@ -27,7 +27,7 @@ const POST = async (request: NextRequest) => {
       );
     }
 
-    console.log("User found -> ", user)
+    console.log("User found -> ", user);
 
     user.isVerified = true;
     user.verifyToken = undefined;
@@ -44,16 +44,30 @@ const POST = async (request: NextRequest) => {
         status: 200,
       }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.log("Error in verifyEmaill -> ", error);
-    return NextResponse.json(
-      {
-        message: error.message,
-      },
-      {
-        status: 500,
-      }
-    );
+    if (error instanceof Error) {
+      // TypeScript now knows this is a general Error object
+      return NextResponse.json(
+        {
+          message: error.message,
+        },
+        {
+          status: 500,
+        }
+      );
+    } else {
+      // Handle unexpected error structures
+      console.error("Unexpected error ->", error);
+      return NextResponse.json(
+        {
+          message: "An unexpected error occurred",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
   }
 };
 
