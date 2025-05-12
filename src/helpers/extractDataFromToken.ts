@@ -1,5 +1,10 @@
 import { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+
+
+interface DecodedTokenData extends JwtPayload {
+  id: string;
+}
 
 const extractDataFromToken = async (request: NextRequest) => {
   try {
@@ -12,7 +17,7 @@ const extractDataFromToken = async (request: NextRequest) => {
     const decodedTokenData: any = await jwt.verify(
       token,
       process.env.JWT_SECRET!
-    );
+    )as DecodedTokenData
 
     return decodedTokenData.id;
   } catch (error) {

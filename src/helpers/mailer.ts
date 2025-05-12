@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import nodemailer, { SentMessageInfo } from "nodemailer";
 import bcrypt from "bcryptjs";
 import { EmailType } from "@/utils/appConstants";
 import User from "@/models/userSchema";
@@ -58,7 +58,7 @@ const sendEmail = async (
   <p>Thanks</p>`,
     };
 
-    const info: any = await transport.sendMail(mailOptions);
+    const info: SentMessageInfo  = await transport.sendMail(mailOptions);
     console.log("Email sent:", info.repsonse);
   } catch (error) {
 
