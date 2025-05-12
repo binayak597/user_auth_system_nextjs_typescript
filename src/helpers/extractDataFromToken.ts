@@ -15,8 +15,13 @@ const extractDataFromToken = async (request: NextRequest) => {
     );
 
     return decodedTokenData.id;
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      console.error("Unexpected error ->", error);
+      throw new Error("An unexpected error occurred");
+    }
   }
 };
 

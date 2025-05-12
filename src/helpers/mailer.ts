@@ -60,9 +60,16 @@ const sendEmail = async (
 
     const info: any = await transport.sendMail(mailOptions);
     console.log("Email sent:", info.repsonse);
-  } catch (error: any) {
+  } catch (error) {
+
     console.error("Error sending email:", error);
-    throw new Error(error.message);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      console.error("Unexpected error ->", error);
+      throw new Error("An unexpected error occurred");
+    }
+    
   }
 };
 

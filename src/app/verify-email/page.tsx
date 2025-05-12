@@ -34,6 +34,8 @@ const VerifyEmailPage = () => {
 
     verifyEmail();
   }, [token]);
+
+  if(error) return <h1>An error occured in this page</h1>
   return (
     <div>
       <h1 className="text-3xl font-bold text-center mt-10">

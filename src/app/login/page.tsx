@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import { ApiError } from "next/dist/server/api-utils";
 
 type LoginFormData = {
   email: string;

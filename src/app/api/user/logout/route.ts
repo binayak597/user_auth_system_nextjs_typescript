@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const GET = async (request: NextRequest) => {
+const GET = async (_request: NextRequest) => {
   try {
     const response = NextResponse.json(
       {
