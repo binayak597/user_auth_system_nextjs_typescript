@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 
 import { connectToDB } from "@/dbConfig/connectToDB";
 import User from "@/models/userSchema";
+import { EmailType } from "@/utils/appConstants";
+import { sendEmail } from "@/helpers/mailer";
 
 connectToDB();
 
@@ -38,6 +40,9 @@ const POST = async (request: NextRequest) => {
 
     console.log("New user created: ", newUser);
 
+    //send the verification email to user
+    await sendEmail(email, EmailType.VERIFY_TOKEN, newUser._id)
+
     return NextResponse.json(
       {
         message: "User created successfully",
@@ -52,7 +57,7 @@ const POST = async (request: NextRequest) => {
     console.log("Error in createUser: ", error);
     return NextResponse.json(
       {
-        error: error.message,
+        message: error.message,
       },
       {
         status: 500,
