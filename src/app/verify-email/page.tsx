@@ -5,20 +5,12 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const VerifyEmailPage = () => {
-  const [token, setToken] = useState<string | undefined>("");
+  const [token, setToken] = useState<string>("");
   const [verified, setVerified] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // const searchParams = new URLSearchParams(window.location.search).get('token')
 
-    const urlToken = window.location.search.split("=")[1];
-
-    setToken(urlToken);
-  }, []);
-
-  useEffect(() => {
-    const verifyEmail = async () => {
+  const verifyEmail = async () => {
       try {
         await axios.post("/api/user/verify-email", { token });
 
@@ -32,7 +24,20 @@ const VerifyEmailPage = () => {
       }
     };
 
-    verifyEmail();
+  useEffect(() => {
+    // const searchParams = new URLSearchParams(window.location.search).get('token')
+
+    const urlToken = window.location.search.split("=")[1];
+
+    setToken(urlToken || "");
+  }, []);
+
+  useEffect(() => {
+    
+    if(token.length > 0){
+
+      verifyEmail()
+    }
   }, [token]);
 
   if(error) return <h1>An error occured in this page</h1>
